@@ -3,8 +3,11 @@
 /* eslint-disable react/prop-types */
 import contextWithSelectors from './context-with-selector';
 
+// { first, last } are provided as initialState
 const { Provider, useStore } = contextWithSelectors({ first: "", last: ""},
-  // Example Function that lives on the store level
+  // Example of functions (actions) that are attached on the global store, ready for use wherever the useStore hook is called
+  // In these functions, set and get are provided to change/get the latest store, and an array of parameters.
+  // We don't have to worry about immutability, as the set function handles that for us.
   { 
     setFirst: ({ set, get }, [inputValue]) => set({ first: inputValue }),
     setLast: ({ set, get }, [inputValue]) => set({ last: inputValue })
@@ -12,6 +15,8 @@ const { Provider, useStore } = contextWithSelectors({ first: "", last: ""},
 );
 
 const Input = () => {
+  // By using a selector, we select only part of the state that we are interested in.
+  // With the use of this "selector" callback, only changes to the "first" property in our state object will cause this component to re-render
   const [fieldValue, { setFirst }] = useStore((store) => store["first"]);
 
   return (
@@ -46,7 +51,6 @@ const Container = ({ children }) => {
 };
 
 export function App() {
-
   return (
     <Provider>
       <div className="App">
